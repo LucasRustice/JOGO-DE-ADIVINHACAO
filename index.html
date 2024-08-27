@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo de Adivinhação - Um Jogador</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Estilos Gerais */
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            background: linear-gradient(135deg, #2c3e50, #4ca1af);
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            color: #ecf0f1;
+            overflow-y: auto;
+        }
+
+        .container {
+            max-height: 90vh;
+            overflow-y: auto;
+            background: rgba(44, 62, 80, 0.9);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+            transition: transform 0.2s;
+            backdrop-filter: blur(10px);
+        }
+
+        .container:hover {
+            transform: scale(1.05);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin: 0 0 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            color: #ecf0f1;
+        }
+
+        h1 i {
+            color: #3498db;
+            margin-right: 10px;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        input[type="text"], input[type="number"] {
+            padding: 15px;
+            width: calc(100% - 32px);
+            margin-bottom: 20px;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            font-size: 1.2em;
+            box-sizing: border-box;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background: #ecf0f1; /* Fundo mais claro */
+            color: #2c3e50; /* Texto mais escuro */
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            border-color: #2980b9;
+            box-shadow: 0 0 5px rgba(41, 128, 185, 0.5);
+            outline: none;
+        }
+
+        button {
+            padding: 15px 25px;
+            background-color: #3498db;
+            color: #ecf0f1; /* Texto claro sobre fundo escuro */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        button i {
+            margin-right: 8px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(41, 128, 185, 0.5);
+        }
+
+        #mensagem {
+            margin-top: 20px;
+            font-size: 1.2em;
+            transition: color 0.3s;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            margin-top: 30px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            color: #ecf0f1;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        li {
+            background: #f9f9f9;
+            color: #2c3e50; /* Texto mais escuro */
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        li:hover {
+            background-color: #e0e0e0;
+            transform: translateY(-1px);
+        }
+
+        #placar {
+            font-weight: bold;
+            margin-top: 20px;
+            color: #ecf0f1;
+        }
+
+        #placar i {
+            color: #f39c12; /* Cor do troféu */
+        }
+
+        /* Animação ao carregar */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .container {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-gamepad"></i> Jogo de Adivinhação</h1>
+        <p>Insira seu nome: <input type="text" id="nomeJogador" placeholder="Seu Nome"></p>
+        <button onclick="iniciarJogo()"><i class="fas fa-play"></i> Iniciar Jogo</button>
+
+        <div id="jogo" style="display: none;">
+            <p><i class="fas fa-question-circle"></i> Tente adivinhar o número que estou pensando entre 1 e 100.</p>
+            <input type="number" id="chute" placeholder="Seu chute" min="1" max="100">
+            <button onclick="adivinhar()"><i class="fas fa-check"></i> Chutar</button>
+            <p id="mensagem"></p>
+            <h2><i class="fas fa-list-ul"></i> Tentativas:</h2>
+            <ul id="tentativas"></ul>
+            <p id="contador"></p>
+            <h2><i class="fas fa-history"></i> Histórico de Jogos:</h2>
+            <ul id="historico"></ul>
+            <h2 id="placar"><i class="fas fa-trophy"></i> Placar:</h2>
+        </div>
+    </div>
+
+    <script>
+        let numeroSecreto;
+        let tentativas = [];
+        let contadorTentativas = 0;
+        let nomeJogador;
+        let historicoJogos = [];
+
+        function iniciarJogo() {
+            nomeJogador = document.getElementById('nomeJogador').value;
+
+            if (!nomeJogador) {
+                alert("Por favor, insira seu nome.");
+                return;
+            }
+
+            document.getElementById('jogo').style.display = 'block';
+            numeroSecreto = Math.floor(Math.random() * 100) + 1;
+            tentativas = []; // Limpar tentativas para a nova rodada
+            contadorTentativas = 0; // Reiniciar contagem de tentativas
+            document.getElementById('tentativas').innerHTML = '';
+            document.getElementById('mensagem').textContent = '';
+            document.getElementById('contador').textContent = '';
+            document.getElementById('chute').disabled = false;
+            document.querySelector('#jogo button').disabled = false;
+        }
+
+        function adivinhar() {
+            const chute = Number(document.getElementById('chute').value);
+            const mensagem = document.getElementById('mensagem');
+            const tentativasUl = document.getElementById('tentativas');
+
+            if (chute < 1 || chute > 100 || isNaN(chute)) {
+                mensagem.textContent = 'Por favor, insira um número válido entre 1 e 100.';
+                mensagem.style.color = '#e74c3c';
+                return;
+            }
+
+            tentativas.push(chute);
+            contadorTentativas++;
+            tentativasUl.innerHTML = tentativas.map(tentativa => `<li>${tentativa}</li>`).join('');
+            document.getElementById('contador').textContent = `Tentativas: ${contadorTentativas}`;
+
+            if (chute === numeroSecreto) {
+                mensagem.textContent = `Parabéns ${nomeJogador}! Você acertou o número ${numeroSecreto} em ${contadorTentativas} tentativas.`;
+                mensagem.style.color = '#2ecc71';
+                document.getElementById('chute').disabled = true;
+                document.querySelector('#jogo button').disabled = true;
+
+                historicoJogos.push(`Número: ${numeroSecreto} - Tentativas: ${contadorTentativas}`);
+                atualizarHistorico();
+
+                if (confirm("Deseja jogar novamente?")) {
+                    iniciarJogo();
+                }
+
+            } else {
+                mensagem.textContent = chute < numeroSecreto ? 'Tente um número maior.' : 'Tente um número menor.';
+                mensagem.style.color = '#3498db';
+            }
+        }
+
+        function atualizarHistorico() {
+            const historicoUl = document.getElementById('historico');
+            historicoUl.innerHTML = historicoJogos.map(jogo => `<li>${jogo}</li>`).join('');
+        }
+
+        document.getElementById('chute').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                adivinhar();
+            }
+        });
+
+    </script>
+</body>
+</html>
